@@ -1,5 +1,10 @@
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+from collections import deque
 from PIL import Image
+import time
+
 
 # Set up the page configuration
 st.set_page_config(page_title="Dark Theme App", layout="wide")
@@ -72,4 +77,4 @@ with st.sidebar:
     st.image(logo, width=250)  # Display the logo in the sidebar
     st.title("INVESTICO CAPITAL")  # Sidebar title
 
-st.title("Nuestra Filosofia")
+st.title("Nuestro Fondo")

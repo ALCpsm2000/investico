@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from collections import deque
 from PIL import Image
+import time
+
 
 # Set up the page configuration
 st.set_page_config(page_title="Dark Theme App", layout="wide")
@@ -63,6 +65,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 # Load the logo from the same folder
 logo = Image.open("logo.png")  # The logo file should be named 'logo.png' and in the same folder
 
@@ -74,35 +77,74 @@ with st.sidebar:
     st.image(logo, width=250)  # Display the logo in the sidebar
     st.title("INVESTICO CAPITAL")  # Sidebar title
 
+st.title("Nuestro Fondo")
+
+
+# Load the logo from the same folder
+
+if "first" not in st.session_state:
+    st.session_state.first = True
+if "not_logged_in" not in st.session_state:
+    st.session_state.not_logged_in =True
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in =False
+
+
+
+if "username" not in st.session_state:
+    st.session_state.username = "username"
+if "password" not in st.session_state:
+    st.session_state.password = ""
+
+
+
+
+
+
+if st.session_state.not_logged_in:
+    
+    # Create placeholders for dynamic input fields
+    place1 = st.empty()
+    place2 = st.empty()
+    place3 = st.empty()
+    place4 = st.empty()
+    
+    st.session_state.username = place1.text_input("Usuario")
+    st.session_state.password = place2.text_input("Password", type="password")    
+    
+    if place3.button("Login"):
+        if st.session_state.username == "ieb" and st.session_state.password == "1234":
+            place4.success("You have successfully logged in")
+            
+            st.session_state.not_logged_in = False #wont ask again for login 
+            st.session_state.logged_in = True #will init the rest of the code
+            time.sleep(2)  # Shorter wait time
+            place1.empty()
+            place2.empty()
+            place3.empty()
+            place4.empty()
+        else:
+            st.error("Invalid credentials. Please try again.")
+
+
+
 # Initialize session state for transactions if not already set
+def initialize_session_state():
+    if "transactions" not in st.session_state:
+        st.session_state.transactions = [
+            {"Day": "09-12-2024", "BUY/SELL": "BUY", "Quantity": 5000, "Price": 100, "Total": 5000 * 100, "P&L": 0},
+            {"Day": "20-12-2024", "BUY/SELL": "BUY", "Quantity": 5000, "Price": 110, "Total": 5000 * 110, "P&L": 0}
+        ]
+        st.session_state.fifo_queue = deque([(5000, 100), (5000, 107)])  # FIFO queue for cost tracking
+        st.session_state.total_quantity = 10000  # Initial quantity held
+        st.session_state.total_cost = (5000 * 100) + (5000 * 110)  # Initial total cost
+        st.session_state.total_pnl = 0  # Initialize P&L
+        st.session_state.current_price = 110  # Set fixed price
 
+initialize_session_state()
 
-once = True
-first = True
-
-
-
-
-
-
-
-
-
-
-
-
-
-if "transactions" not in st.session_state:
-    st.session_state.transactions = [
-        {"Day": "09-12-2024", "BUY/SELL": "BUY", "Quantity": 5000, "Price": 100, "Total": 5000 * 100, "P&L": 0},
-        {"Day": "20-12-2024", "BUY/SELL": "BUY", "Quantity": 5000, "Price": 110, "Total": 5000 * 110, "P&L": 0}
-    ]
-    st.session_state.fifo_queue = deque([(5000, 100), (5000, 107)])  # FIFO queue for cost tracking
-    st.session_state.total_quantity = 10000  # Initial quantity held
-    st.session_state.total_cost = (5000 * 100) + (5000 * 110)  # Initial total cost
-    st.session_state.total_pnl = 0  # Initialize P&L
-    st.session_state.current_price = 110  # Set fixed price
-
+# Transaction Functions (buy/sell)
 def buy(quantity):
     price = st.session_state.current_price  # Hardcoded price
     st.session_state.transactions.append({
@@ -137,11 +179,9 @@ def sell(quantity):
             cost_removed += remaining_to_sell * price
             remaining_to_sell = 0
     
-    # Correct calculation of FIFO cost
     pnl = total_sale_value - cost_removed
     st.session_state.total_pnl += pnl
     
-    # Update the transactions with correct sell values
     st.session_state.transactions.append({
         "Day": pd.Timestamp.now().strftime("%d-%m-%Y"),
         "BUY/SELL": "SELL",
@@ -151,7 +191,6 @@ def sell(quantity):
         "P&L": pnl
     })
     
-    # Update total quantity and total cost
     st.session_state.total_quantity -= quantity
     st.session_state.total_cost -= cost_removed  # Correct total cost after sale
 
@@ -192,48 +231,44 @@ def render_table_as_image(df):
     bg.save("table_final.png")
     return "table_final.png"
 
-# Display portfolio summary
-st.title("Area del Inversor")
-st.subheader("Portfolio Summary")
-st.write(f"**Cantidad:** {st.session_state.total_quantity:,.0f}")
-st.write(f"**NAV:** {st.session_state.current_price:,.2f}")
-st.write(f"**Valor de Mercado:** {(st.session_state.current_price * st.session_state.total_quantity):,.2f}")
-st.write(f"**Plusvalia:** {(st.session_state.current_price * st.session_state.total_quantity)-(st.session_state.total_cost / max(1, st.session_state.total_quantity) * st.session_state.total_quantity):,.2f}")
+# Login Logic
 
 
-# User input for transactions
-st.subheader("New Transaction")
-st.write("**Select Transaction Type:**")
-quantity_input = st.number_input("Enter Quantity", min_value=1, value=1000)
+# Wait for login success before proceeding
 
-col1, col2 = st.columns(2)
-with col1:
-    st.write("Subscripcion:")
-    if st.button("Subscripcion"):
-        buy(quantity_input)
-        st.rerun()
+# Only proceed if logged in
+if st.session_state.logged_in:
+    initialize_session_state()
 
-with col2:
-    st.write("Reembolso:")
-    if st.button("Reembolso"):
-        sell(quantity_input)
-        st.rerun()
-        
+    # Display portfolio summary
+    st.title("Area del Inversor")
+    st.subheader("Portfolio Summary")
+    st.write(f"**Cantidad:** {st.session_state.total_quantity:,.0f}")
+    st.write(f"**NAV:** {st.session_state.current_price:,.2f}")
+    st.write(f"**Valor de Mercado:** {(st.session_state.current_price * st.session_state.total_quantity):,.2f}")
+    st.write(f"**Plusvalia:** {(st.session_state.current_price * st.session_state.total_quantity)-(st.session_state.total_cost / max(1, st.session_state.total_quantity) * st.session_state.total_quantity):,.2f}")
 
-# Generate and display table image
-st.subheader("Transaction History")
-df = pd.DataFrame(st.session_state.transactions)
-table_image_path = render_table_as_image(df)
-st.image(table_image_path, use_column_width=True)
+    # User input for transactions
+    st.subheader("New Transaction")
+    st.write("**Select Transaction Type:**")
+    quantity_input = st.number_input("Enter Quantity", min_value=1, value=1000)
 
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("Subscripcion:")
+        if st.button("Subscripcion"):
+            buy(quantity_input)
 
+    with col2:
+        st.write("Reembolso:")
+        if st.button("Reembolso"):
+            sell(quantity_input)
 
+    # Generate and display table image
+    st.subheader("Transaction History")
+    df = pd.DataFrame(st.session_state.transactions)
+    table_image_path = render_table_as_image(df)
+    st.image(table_image_path, use_column_width=True)
 
-
-st.write(f"**FIFO Cost:** {st.session_state.total_cost / max(1, st.session_state.total_quantity):.2f} per unit")
-st.write(f"**P&L Realizado:** {st.session_state.total_pnl:.2f}")
-
-
-
-# Create empty containers for widgets so they can be cleared later
-
+    st.write(f"**FIFO Cost:** {st.session_state.total_cost / max(1, st.session_state.total_quantity):.2f} per unit")
+    st.write(f"**P&L Realizado:** {st.session_state.total_pnl:.2f}")
