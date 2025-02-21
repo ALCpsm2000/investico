@@ -77,7 +77,7 @@ with st.sidebar:
     st.image(logo, width=250)  # Display the logo in the sidebar
     st.title("INVESTICO CAPITAL")  # Sidebar title
 
-st.title("Nuestro Fondo")
+st.write("<h2 style='color: rgb(192, 79, 21);'>Area Cliente</h2>", unsafe_allow_html=True)
 
 
 # Load the logo from the same folder
@@ -237,6 +237,14 @@ def render_table_as_image(df):
 # Wait for login success before proceeding
 
 # Only proceed if logged in
+
+
+
+
+
+
+
+
 if st.session_state.logged_in:
     initialize_session_state()
 
@@ -258,11 +266,13 @@ if st.session_state.logged_in:
         st.write("Subscripcion:")
         if st.button("Subscripcion"):
             buy(quantity_input)
+            st.rerun()
 
     with col2:
         st.write("Reembolso:")
         if st.button("Reembolso"):
             sell(quantity_input)
+            st.rerun()
 
     # Generate and display table image
     st.subheader("Transaction History")

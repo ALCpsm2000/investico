@@ -81,7 +81,7 @@ with st.sidebar:
     st.title("INVESTICO CAPITAL")  # Sidebar title
 
 
-
+st.write("<h2 style='color: rgb(192, 79, 21);'>Zona Descarga</h2>", unsafe_allow_html=True)
 
 
 

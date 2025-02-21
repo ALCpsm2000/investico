@@ -71,3 +71,5 @@ logo = logo.resize((250, 250))  # Increase the size to 250x250 pixels
 with st.sidebar:
     st.image(logo, width=250)  # Display the logo in the sidebar
     st.title("INVESTICO CAPITAL")  # Sidebar title
+
+st.write("<h2 style='color: rgb(192, 79, 21);'>Nuestros Inversores</h2>", unsafe_allow_html=True)
