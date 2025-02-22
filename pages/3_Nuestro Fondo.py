@@ -101,6 +101,7 @@ fig = px.line(df, x='Date', y=['NAV Fund', 'NAV BM'],
 # Customize hover data
 fig.update_traces(marker=dict(size=8), hovertemplate="NAV: %{x}<br>Date: %{y}")
 
+
 # Customize layout
 fig.update_layout(
     plot_bgcolor="#f5f5f5",  # Set background color
@@ -125,12 +126,6 @@ fig.update_layout(
         )))
 
 
-
-
-
-
-
-
 fig1 = go.Figure(go.Pie(
     labels=df1['Sector'],  # Use the 'Sector' column for labels
     values=df1['Peso'],    # Use the 'Peso' column for values
@@ -142,7 +137,7 @@ fig1 = go.Figure(go.Pie(
 fig1.update_layout(
     plot_bgcolor="#f5f5f5",  # Set plot background to light gray
     paper_bgcolor="#0E1117",  # Set paper (entire figure) background color
-    title="Asset Allocation ",  # Add title
+    title="Asset Allocation Estrategia CORE ",  # Add title
     title_x=0.5,  # Center the title
     title_font=dict(
         size=24,  # Font size of the title
@@ -156,13 +151,44 @@ fig1.update_layout(
         )))
 
 
+#active return chart
+fig3 = px.line(df, x='Date', y=['Active'], 
+              title="Active Return",
+              labels={'Date': 'Date', 'value': 'Active return'},
+              color_discrete_sequence=['#1f77b4', '#ff7f0e'])
+
+
+fig3.update_layout(
+    plot_bgcolor="#f5f5f5",  # Set plot background to light gray
+    paper_bgcolor="#0E1117",  # Set paper (entire figure) background color
+    title="Active return",  # Add title
+    title_x=0.5,  # Center the title
+    title_font=dict(
+        size=24,  # Font size of the title
+        family="Arial",  # Font family of the title
+        color="white"  # Font color of the title
+    ),
+    legend=dict(title="",  # Set legend title
+        font=dict(
+            size=14,  # Font size for legend text
+            color="white"  # Font color for legend text (main legend text)
+        )))
+
+
+
+
+
+
+
+
+
 # Display the plot in Streamlit
 st.plotly_chart(fig1)
 
 # Show the plot in Streamlit
 st.plotly_chart(fig)
 
-
+st.plotly_chart(fig3)
 
 
 
