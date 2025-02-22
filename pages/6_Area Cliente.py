@@ -57,11 +57,11 @@ def initialize_session_state():
     if "transactions_df" not in st.session_state:
         st.session_state.transactions_df = pd.DataFrame([
             {"Day": "09-12-2024", "BUY/SELL": "BUY", "Quantity": 5000, "Price": 100, "Total": 5000 * 100, "P&L": 0},
-            {"Day": "20-12-2024", "BUY/SELL": "BUY", "Quantity": 5000, "Price": 110, "Total": 5000 * 110, "P&L": 0}
+            {"Day": "20-12-2024", "BUY/SELL": "BUY", "Quantity": 5000, "Price": 97.26, "Total": 5000 * 97.26, "P&L": 0}
         ])
-        st.session_state.fifo_queue = deque([(5000, 100), (5000, 110)])
+        st.session_state.fifo_queue = deque([(5000, 100), (5000, 97.26)])
         st.session_state.total_quantity = 10000
-        st.session_state.total_cost = (5000 * 100) + (5000 * 110)
+        st.session_state.total_cost = (5000 * 100) + (5000 * 97.26)
         st.session_state.total_pnl = 0
         st.session_state.current_price = 110
 
@@ -90,10 +90,17 @@ if st.session_state.logged_in:
         if quantity > st.session_state.total_quantity:
             st.warning("Not enough quantity to sell!")
             return
-        
         st.session_state.total_quantity -= quantity
         st.session_state.transactions_df = pd.concat([st.session_state.transactions_df, pd.DataFrame([{"Day": pd.Timestamp.now().strftime("%d-%m-%Y"), "BUY/SELL": "SELL", "Quantity": -quantity, "Price": sell_price, "Total": -quantity * sell_price, "P&L": 0}])], ignore_index=True)
-    
+        st.session_state.total_cost += -quantity * sell_price
+        st.session_state.fifo_queue.append((-quantity, sell_price))    
+
+
+
+
+
+
+
     # User input for transactions
     st.subheader("New Transaction")
     quantity_input = st.number_input("Enter Quantity", min_value=1, value=1000)

@@ -89,7 +89,7 @@ st. write("Nustro Fondo tiene una parte Core, Pasive, y Hedged")
 
 df = pd.read_excel("returns.xlsx")
 df1 = pd.read_excel("assetallocation.xlsx")
-
+df0 = pd.read_excel("strategyallocation.xlsx")
 
 df['Date'] = pd.to_datetime(df['Date'])
 
@@ -126,11 +126,45 @@ fig.update_layout(
         )))
 
 
+#asset allocation by strategies
+fig0 = go.Figure(go.Pie(
+    labels=df0['Estrategia'],  # Use the 'Sector' column for labels
+    values=df0['Peso'],    # Use the 'Peso' column for values
+    hole=0.4,             # Makes it a donut plot (hole in the center)
+    marker=dict(colors=['rgb(192,79,21))', 'rgb(8,79,106)', 'rgb(39,83,23)',"rgb(10,105,135)"])  # Custom colors
+))
+
+fig0.update_layout(
+    plot_bgcolor="#f5f5f5",  # Set plot background to light gray
+    paper_bgcolor="#0E1117",  # Set paper (entire figure) background color
+    title="Estrategia ",  # Add title
+    title_x=0.5,  # Center the title
+    title_font=dict(
+        size=24,  # Font size of the title
+        family="Arial",  # Font family of the title
+        color="white"  # Font color of the title
+    ),
+    legend=dict(title="Sectores",  # Set legend title
+        font=dict(
+            size=14,  # Font size for legend text
+            color="white"  # Font color for legend text (main legend text)
+        )))
+
+
+
+
+
+
+
+
+
+
+#big pie
 fig1 = go.Figure(go.Pie(
     labels=df1['Sector'],  # Use the 'Sector' column for labels
     values=df1['Peso'],    # Use the 'Peso' column for values
     hole=0.4,             # Makes it a donut plot (hole in the center)
-    marker=dict(colors=['#ff7f0e', '#1f77b4', '#2ca02c'])  # Custom colors
+    marker=dict(colors=['rgb(192,79,21))', 'rgb(8,79,106)', 'rgb(39,83,23)',"rgb(220,105,50)","rgb(10,105,135)","rgb(50,110,30)","rgb(170,60,15)","rgb(5,60,90)","rgb(25,100,40)","rgb(180,70,25","rgb(210,90,40)","rgb(20,70,110)"])  # Custom colors
 ))
 
 # Customize the background color
@@ -181,9 +215,11 @@ fig3.update_layout(
 
 
 
-
+st.plotly_chart(fig0)
 # Display the plot in Streamlit
 st.plotly_chart(fig1)
+
+
 
 # Show the plot in Streamlit
 st.plotly_chart(fig)
