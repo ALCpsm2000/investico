@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 
 
 # Set up the page configuration
-st.set_page_config(page_title="Dark Theme App", layout="wide")
+st.set_page_config(page_title="Investico", layout="wide")
 
 # Apply custom dark theme styling
 st.markdown(
@@ -73,6 +73,61 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
+df = pd.read_excel("returns.xlsx")
+df1 = pd.read_excel("assetallocation.xlsx")
+df0 = pd.read_excel("strategyallocation.xlsx")
+
+
+
+#RETURN CALCULATOR
+
+def calculate_final_quantity(df, start_date, initial_quantity):
+    """
+    Calculates the final quantity given an initial quantity and a start date.
+    
+    Parameters:
+        df (pd.DataFrame): DataFrame with 'date' (datetime) and 'returns' columns.
+        start_date (str or datetime): The start date for calculating returns.
+        initial_quantity (float): The initial quantity to be adjusted by returns.
+
+    Returns:
+        float: The final quantity after applying returns.
+    """
+    # Ensure date column is datetime
+    df["Date"] = pd.to_datetime(df['Date'])
+
+    # Filter the DataFrame from the start_date onward
+    df_filtered = df[df["Date"] >= pd.to_datetime(start_date)]
+
+    # Calculate the cumulative product of returns
+    total_return = df_filtered["Fund_1"].prod()
+
+    # Compute final quantity
+    final_quantity = initial_quantity * total_return
+
+    return final_quantity
+
+
+st.title("Nuestro Fondo 📈")
+
+st.write("<h2 style='color: rgb(192, 79, 21);'>Calculadora de inversión</h2>", unsafe_allow_html=True)
+start_date = st.date_input("Select Start Date", df["Date"].min(), max_value=df["Date"].max())
+initial_quantity = st.number_input("Enter Initial Quantity", min_value=0.0, value=100.0, step=10.0)
+
+if st.button("Calculate"):
+    result = calculate_final_quantity(df, start_date, initial_quantity)
+    st.write(f"Cantidad a dia de hoy: **{result:.2f}**")
+
+
+
+
+
+
+
+
+
+
 # Load the logo from the same folder
 logo = Image.open("logo.png")  # The logo file should be named 'logo.png' and in the same folder
 
@@ -83,13 +138,23 @@ with st.sidebar:
     st.image(logo, width=250)  # Display the logo in the sidebar
     st.title("INVESTICO CAPITAL")  # Sidebar title
 
+st.sidebar.write("Rentabilidad desde inicio:")
+st.sidebar.write("Fondo: -0.74%")
+st.sidebar.write("BM: -1.29%")
+st.sidebar.write("")
+st.sidebar.write("Estrategias:")
+st.sidebar.write("Core: -1.77%")
+st.sidebar.write("Pasiva: -0,56%")
+st.sidebar.write("Hedge: 4,18%")
+
+
+
+
+
 st.write("<h2 style='color: rgb(192, 79, 21);'>Nuestro Fondo</h2>", unsafe_allow_html=True)
-st. write("Nustro Fondo tiene una parte Core, Pasive, y Hedged")
+st. write("Nustro Fondo esta compuesto de Core, Pasive, y Hedged")
 
 
-df = pd.read_excel("returns.xlsx")
-df1 = pd.read_excel("assetallocation.xlsx")
-df0 = pd.read_excel("strategyallocation.xlsx")
 
 df['Date'] = pd.to_datetime(df['Date'])
 
@@ -99,7 +164,7 @@ fig = px.line(df, x='Date', y=['NAV Fund', 'NAV BM'],
               labels={'Date': 'Date', 'value': 'NAV'},
               color_discrete_sequence=['#1f77b4', '#ff7f0e'])
 # Customize hover data
-fig.update_traces(marker=dict(size=8), hovertemplate="NAV: %{x}<br>Date: %{y}")
+fig.update_traces(marker=dict(size=8), hovertemplate="Date: %{x}<br>NAV: %{y}")
 
 
 # Customize layout
@@ -228,4 +293,4 @@ st.plotly_chart(fig3)
 
 
 
-st.write("Here's the DataFrame:", df)
+#st.write("Here's the DataFrame:", df)

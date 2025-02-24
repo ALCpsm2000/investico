@@ -86,7 +86,7 @@ st.write("<h2 style='color: rgb(192, 79, 21);'>Zona Descarga</h2>", unsafe_allow
 
 
 # Specify the file path for PowerPoint
-pptx_file_path = "testpwr.pptx"
+pptx_file_path = "Presentación Analistas Investico.pptx"
 dummy1 = ""
 dummy2 = ""
 

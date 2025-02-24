@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 
 # Set up the page configuration
-st.set_page_config(page_title="Dark Theme App", layout="wide")
+st.set_page_config(page_title="Investico", layout="wide")
 
 # Apply custom dark theme styling
 st.markdown(

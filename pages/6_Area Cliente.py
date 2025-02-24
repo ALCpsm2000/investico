@@ -63,7 +63,8 @@ def initialize_session_state():
         st.session_state.total_quantity = 10000
         st.session_state.total_cost = (5000 * 100) + (5000 * 97.26)
         st.session_state.total_pnl = 0
-        st.session_state.current_price = 110
+        st.session_state.current_price = 99.18
+
 
 if st.session_state.logged_in:
     initialize_session_state()
@@ -130,4 +131,5 @@ if st.session_state.logged_in:
         st.download_button(label="Download Transactions", data=open("transactions.xlsx", "rb"), file_name="transactions.xlsx", mime="application/vnd.ms-excel")
     
     st.write(f"**FIFO Cost:** {st.session_state.total_cost / max(1, st.session_state.total_quantity):.2f} per unit")
-    st.write(f"**P&L Realizado:** {st.session_state.total_pnl:.2f}")
+    #st.write(f"**P&L Realizado:** {st.session_state.total_pnl:.2f}")
+

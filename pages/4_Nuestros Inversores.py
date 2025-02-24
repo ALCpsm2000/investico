@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 
 # Set up the page configuration
-st.set_page_config(page_title="Dark Theme App", layout="wide")
+st.set_page_config(page_title="Investico", layout="wide")
 
 # Apply custom dark theme styling
 st.markdown(
@@ -73,3 +73,6 @@ with st.sidebar:
     st.title("INVESTICO CAPITAL")  # Sidebar title
 
 st.write("<h2 style='color: rgb(192, 79, 21);'>Nuestros Inversores</h2>", unsafe_allow_html=True)
+
+
+st.write("En desarollo")

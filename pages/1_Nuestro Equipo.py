@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 
 # Set up the page configuration
-st.set_page_config(page_title="Dark Theme App", layout="wide")
+st.set_page_config(page_title="Investico", layout="wide")
 
 # Apply custom dark theme styling
 st.markdown(
@@ -76,11 +76,32 @@ st.write("<h2 style='color: rgb(192, 79, 21);'>Nuestro Equipo</h2>", unsafe_allo
 
 #page
 
-image = Image.open("foto_ricardo.jpg")
-st.image(image, caption="", width=(250))
-st.write("Ricardo")
+col1, col2 = st.columns(2)
 
+# First row
+with col1:
+    image = Image.open("foto_ricardo.jpg")
+    st.image(image, caption="", width=250)
+    st.write("Ricardo Bravo")
+    st.write("rbravo@ivc.com")
 
-image = Image.open("foto_pablo.png")
-st.image(image, caption="", width=(250))
-st.write("Pablo")
+with col2:
+    image = Image.open("foto_valle.jpg")
+    st.image(image, caption="", width=250)
+    st.write("Valle Samaniego")
+    st.write("vsamaniego@ivc.com")
+
+# Second row
+col3, col4 = st.columns(2)
+
+with col3:
+    image = Image.open("foto_pablo.png")
+    st.image(image, caption="", width=300, )
+    st.write("Pablo Soto")
+    st.write("psoto@ivc.com")
+
+with col4:
+    image = Image.open("foto_brad.png")
+    st.image(image, caption="", width=250)
+    st.write("Jaime Prieto")
+    st.write("jpietro@ivc.com")
