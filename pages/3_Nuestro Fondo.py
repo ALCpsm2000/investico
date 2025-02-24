@@ -191,6 +191,15 @@ fig.update_layout(
         )))
 
 
+fig.update_layout(
+    plot_bgcolor="#f5f5f5",  # Set background color
+    xaxis=dict(showgrid=True, gridcolor='white'),
+    yaxis=dict(showgrid=True, gridcolor='white', range=[95, 105])  # Force y-axis range
+)
+
+
+
+
 #asset allocation by strategies
 fig0 = go.Figure(go.Pie(
     labels=df0['Estrategia'],  # Use the 'Sector' column for labels
